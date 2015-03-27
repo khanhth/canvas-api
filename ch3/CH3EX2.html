@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title></title>
+<script src="modernizr.js"></script>
+<script type="text/javascript" src="jscolor/jscolor.js"></script>
+<script type="text/javascript">
+
+window.addEventListener("load", eventWindowLoaded, false);
+function eventWindowLoaded() {
+	canvasApp();
+}
+
+function canvasSupport () {
+  	return Modernizr.canvas;
+}
+
+function canvasApp() {
+	var message = "your text";
+
+	if (!canvasSupport()) {
+		return;
+	}
+
+	var theCanvas = document.getElementById("canvas");
+	var context = theCanvas.getContext("2d"); 
+
+	var formElement = document.getElementById("textBox");
+	formElement.addEventListener('keyup', textBoxChanged, false);	
+
+	formElement = document.getElementById("textSize");
+	formElement.addEventListener('change', textSizeChanged, false);	
+
+	formElement = document.getElementById("textFillColor");
+	formElement.addEventListener('change', textFillColorChanged, false);	
+
+	drawScreen();
+	drawScreen({yPosition: '150'});
+
+	function drawScreen(options) {
+		var options = options ? options : {};
+		options.fillStyle = options.fillStyle ? options.fillStyle : '#ffffaa';
+		options.textBaseline = options.textBaseline ? options.textBaseline : 'bottom';
+		options.textAlign = options.textAlign ? options.textAlign : 'center';
+		options.fontStyle = options.fontStyle ? options.fontStyle : 'normal';
+		options.fontWeight = options.fontWeight ? options.fontWeight : 'normal';
+		options.fontSize = options.fontSize ? options.fontSize : '50';
+		options.fontFace = options.fontFace ? options.fontFace : 'serif';
+		options.textFillColor = options.textFillColor ? options.textFillColor : '#333';
+		options.xPosition = options.xPosition ? options.xPosition : theCanvas.width/2;
+		options.yPosition = options.yPosition ? options.yPosition : theCanvas.height;
+
+		// Background
+		context.fillStyle = options.fillStyle;
+		context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+
+		// Text
+		context.textBaseline = options.textBaseline;
+		context.textAlign = options.textAlign;
+		context.font = options.fontWeight + " " + options.fontStyle + " " + options.fontSize + "px " + options.fontFace;
+		
+		
+		context.fillStyle = options.textFillColor;
+   	 	context.fillText(message, options.xPosition, options.yPosition);
+	}
+
+	function textBoxChanged(e) {
+		var target =  e.target;
+		message = target.value;
+		drawScreen();
+	}
+
+	function textSizeChanged(e) {
+		var target =  e.target;
+		fontSize = target.value;
+		drawScreen();
+	}
+
+	function textFillColorChanged(e) {
+		var target =  e.target;
+		textFillColor = "#" + target.value;
+		drawScreen();
+	}
+
+}
+
+</script> 
+</head>
+<body>
+<div style="position: absolute; top: 50px; left: 50px;">
+<canvas id="canvas" width="500" height="300">Your browser does not support HTML 5 Canvas.</canvas>
+<form>
+<div>
+	<label for="">Text:</label>
+	<input id="textBox" placeholder="your text" />
+</div>
+<div>
+	<label for="">Text Size:</label>
+	<input type="range" id="textSize" min="0" max="200" step="1" value="50"/></div>
+<div>
+	<label for="">Text Color:</label>
+	<input class="color" id="textFillColor" value="FF0000"/></div>
+</form>
+</div>
+</body>
+</html>
+
+
+
+
